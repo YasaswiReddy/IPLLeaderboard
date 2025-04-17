@@ -1,5 +1,7 @@
 import {
   users, type User, type InsertUser,
+  leagues, type League, type InsertLeague,
+  pointsSystem, type PointsSystem, type InsertPointsSystem,
   iplTeams, type IplTeam, type InsertIplTeam,
   playerRoles, type PlayerRole, type InsertPlayerRole,
   players, type Player, type InsertPlayer,
@@ -16,6 +18,16 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
 
+  // League operations
+  getLeagues(): Promise<League[]>;
+  getLeague(id: number): Promise<League | undefined>;
+  getLeagueByName(name: string): Promise<League | undefined>;
+  createLeague(league: InsertLeague): Promise<League>;
+  
+  // Points system operations
+  getPointsSystem(leagueId: number): Promise<PointsSystem | undefined>;
+  createPointsSystem(pointsSystem: InsertPointsSystem): Promise<PointsSystem>;
+  
   // IPL Teams operations
   getIplTeams(): Promise<IplTeam[]>;
   getIplTeam(id: number): Promise<IplTeam | undefined>;
@@ -50,9 +62,11 @@ export interface IStorage {
 
   // Fantasy teams operations
   getFantasyTeams(): Promise<FantasyTeam[]>;
+  getFantasyTeamsByLeague(leagueId: number): Promise<FantasyTeam[]>;
   getFantasyTeam(id: number): Promise<FantasyTeam | undefined>;
   getUserFantasyTeam(userId: number): Promise<FantasyTeam | undefined>;
   getFantasyLeaderboard(): Promise<(FantasyTeam & { user: User })[]>;
+  getFantasyLeaderboardByLeague(leagueId: number): Promise<(FantasyTeam & { user: User })[]>;
   createFantasyTeam(team: InsertFantasyTeam): Promise<FantasyTeam>;
   updateFantasyTeamPoints(id: number, totalPoints: number, weeklyPoints: number): Promise<FantasyTeam>;
 
