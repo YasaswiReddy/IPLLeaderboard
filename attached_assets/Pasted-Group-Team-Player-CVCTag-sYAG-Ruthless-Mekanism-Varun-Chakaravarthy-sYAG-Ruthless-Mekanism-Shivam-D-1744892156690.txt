@@ -1,0 +1,286 @@
+Group	Team	Player	CVCTag
+sYAG	Ruthless Mekanism	Varun Chakaravarthy	
+sYAG	Ruthless Mekanism	Shivam Dube	
+sYAG	Ruthless Mekanism	Rishabh Pant	
+sYAG	Ruthless Mekanism	Travis Head	C
+sYAG	Ruthless Mekanism	Rohit Sharma	
+sYAG	Ruthless Mekanism	Jos Buttler	
+sYAG	Ruthless Mekanism	Sunil Narine	VC
+sYAG	Ruthless Mekanism	Rajat Patidar	
+sYAG	Ruthless Mekanism	Prabhsimran Singh	
+sYAG	Ruthless Mekanism	Krunal Pandya	
+sYAG	Ruthless Mekanism	Harshal Patel	
+sYAG	Ruthless Mekanism	Nitish Rana	
+sYAG	Ruthless Mekanism	Ravichandran Ashwin	
+sYAG	Ruthless Mekanism	Shahbaz Ahmed	
+sYAG	Ruthless Mekanism	Kagiso Rabada	
+sYAG	ManTanRays	Arshdeep Singh	
+sYAG	ManTanRays	Ravindra Jadeja	
+sYAG	ManTanRays	Lokesh Rahul	
+sYAG	ManTanRays	Suryakumar Yadav	VC
+sYAG	ManTanRays	Yashasvi Jaiswal	C
+sYAG	ManTanRays	Andre Russell	
+sYAG	ManTanRays	Will Jacks	
+sYAG	ManTanRays	Jake Fraser-McGurk	
+sYAG	ManTanRays	David Miller	
+sYAG	ManTanRays	Noor Ahmad	
+sYAG	ManTanRays	Angkrish Raghuvanshi	
+sYAG	ManTanRays	Azmatullah Omarzai	
+sYAG	ManTanRays	Jacob Bethell	
+sYAG	ManTanRays	Vaibhav Arora	
+sYAG	ManTanRays	Robin Minz	
+sYAG	Kand Karenge	Jasprit Bumrah	
+sYAG	Kand Karenge	Matheesha Pathirana	
+sYAG	Kand Karenge	Hardik Pandya	C
+sYAG	Kand Karenge	Dhruv Jurel	
+sYAG	Kand Karenge	Heinrich Klaasen	
+sYAG	Kand Karenge	Shreyas Iyer	VC
+sYAG	Kand Karenge	Nitish Kumar Reddy	
+sYAG	Kand Karenge	Mohammed Shami	
+sYAG	Kand Karenge	Rachin Ravindra	
+sYAG	Kand Karenge	Mitchell Starc	
+sYAG	Kand Karenge	Shimron Hetmyer	
+sYAG	Kand Karenge	Deepak Chahar	
+sYAG	Kand Karenge	Shashank Singh	
+sYAG	Kand Karenge	Glenn Phillips	
+sYAG	Kand Karenge	Mitchell Santner	
+sYAG	Nirvana	Josh Hazlewood	
+sYAG	Nirvana	Jofra Archer	
+sYAG	Nirvana	Trent Boult	
+sYAG	Nirvana	Kuldeep Yadav	
+sYAG	Nirvana	Abhishek Sharma	VC
+sYAG	Nirvana	Shubman Gill	C
+sYAG	Nirvana	Philip Salt	
+sYAG	Nirvana	Mitchell Marsh	
+sYAG	Nirvana	Devon Conway	
+sYAG	Nirvana	Josh Inglis	
+sYAG	Nirvana	Quinton de Kock	
+sYAG	Nirvana	Aiden Markram	
+sYAG	Nirvana	Glenn Maxwell	
+sYAG	Nirvana	Marco Jansen	
+sYAG	Nirvana	Ramandeep Singh	
+sYAG	Bangchester United	Rashid Khan	
+sYAG	Bangchester United	Mohammed Siraj	
+sYAG	Bangchester United	Axar Patel	VC
+sYAG	Bangchester United	Virat Kohli	C
+sYAG	Bangchester United	Ruturaj Gaikwad	
+sYAG	Bangchester United	Tilak Varma	
+sYAG	Bangchester United	Ishan Kishan	
+sYAG	Bangchester United	Faf Du Plessis	
+sYAG	Bangchester United	Marcus Stoinis	
+sYAG	Bangchester United	Tristan Stubbs	
+sYAG	Bangchester United	Thangarasu Natarajan	
+sYAG	Bangchester United	Harshit Rana	
+sYAG	Bangchester United	Bhuvneshwar Kumar	
+sYAG	Bangchester United	Wanindu Hasaranga	
+sYAG	Bangchester United	Mahendra Singh Dhoni	
+sYAG	Thala-La-Land	Yuzvendra Chahal	
+sYAG	Thala-La-Land	Pat Cummins	VC
+sYAG	Thala-La-Land	Venkatesh Iyer	
+sYAG	Thala-La-Land	Nicholas Pooran	
+sYAG	Thala-La-Land	Sanju Samson	C
+sYAG	Thala-La-Land	Rinku Singh	
+sYAG	Thala-La-Land	Riyan Parag	
+sYAG	Thala-La-Land	B Sai Sudharsan	
+sYAG	Thala-La-Land	Ajinkya Rahane	
+sYAG	Thala-La-Land	Abhishek Porel	
+sYAG	Thala-La-Land	Jitesh Sharma	
+sYAG	Thala-La-Land	Sam Curran	
+sYAG	Thala-La-Land	Avesh Khan	
+sYAG	Thala-La-Land	Ravi Bishnoi	
+sYAG	Thala-La-Land	Mukesh Kumar	
+B Phase Dogs	Gulistan Ke Farishtey	Ruturaj Gaikwad	
+B Phase Dogs	Gulistan Ke Farishtey	Mohammed Siraj	VC
+B Phase Dogs	Gulistan Ke Farishtey	Venkatesh Iyer	
+B Phase Dogs	Gulistan Ke Farishtey	Shreyas Iyer	
+B Phase Dogs	Gulistan Ke Farishtey	Jos Buttler	C
+B Phase Dogs	Gulistan Ke Farishtey	Rashid Khan	
+B Phase Dogs	Gulistan Ke Farishtey	Josh Hazlewood	
+B Phase Dogs	Gulistan Ke Farishtey	Philip Salt	
+B Phase Dogs	Gulistan Ke Farishtey	Nitish Kumar Reddy	
+B Phase Dogs	Gulistan Ke Farishtey	Mitchell Starc	
+B Phase Dogs	Gulistan Ke Farishtey	Andre Russell	
+B Phase Dogs	Gulistan Ke Farishtey	Mitchell Marsh	
+B Phase Dogs	Gulistan Ke Farishtey	Rajat Patidar	
+B Phase Dogs	Gulistan Ke Farishtey	Naman Dhir	
+B Phase Dogs	Gulistan Ke Farishtey	Nitish Rana	
+B Phase Dogs	Kadapa Kings	Shivam Dube	
+B Phase Dogs	Kadapa Kings	Dhruv Jurel	
+B Phase Dogs	Kadapa Kings	Yashasvi Jaiswal	C
+B Phase Dogs	Kadapa Kings	Ravindra Jadeja	
+B Phase Dogs	Kadapa Kings	Suryakumar Yadav	
+B Phase Dogs	Kadapa Kings	Yuzvendra Chahal	
+B Phase Dogs	Kadapa Kings	Tilak Varma	VC
+B Phase Dogs	Kadapa Kings	Devon Conway	
+B Phase Dogs	Kadapa Kings	B Sai Sudharsan	
+B Phase Dogs	Kadapa Kings	Noor Ahmad	
+B Phase Dogs	Kadapa Kings	Angkrish Raghuvanshi	
+B Phase Dogs	Kadapa Kings	Harshal Patel	
+B Phase Dogs	Kadapa Kings	Ajinkya Rahane	
+B Phase Dogs	Kadapa Kings	Josh Inglis	
+B Phase Dogs	Kadapa Kings	Vaibhav Arora	
+B Phase Dogs	Kateramma and Sons	Kuldeep Yadav	
+B Phase Dogs	Kateramma and Sons	Jofra Archer	
+B Phase Dogs	Kateramma and Sons	Rohit Sharma	
+B Phase Dogs	Kateramma and Sons	Arshdeep Singh	
+B Phase Dogs	Kateramma and Sons	Lokesh Rahul	
+B Phase Dogs	Kateramma and Sons	Trent Boult	C
+B Phase Dogs	Kateramma and Sons	Shubman Gill	VC
+B Phase Dogs	Kateramma and Sons	Rachin Ravindra	
+B Phase Dogs	Kateramma and Sons	Quinton de Kock	
+B Phase Dogs	Kateramma and Sons	Ravi Bishnoi	
+B Phase Dogs	Kateramma and Sons	Wanindu Hasaranga	
+B Phase Dogs	Kateramma and Sons	Faf Du Plessis	
+B Phase Dogs	Kateramma and Sons	Krunal Pandya	
+B Phase Dogs	Kateramma and Sons	Maheesh Theekshana	
+B Phase Dogs	Kateramma and Sons	Ryan Rickelton	
+B Phase Dogs	Reyansh COLLEGE OF HOTEL MGMT	Heinrich Klaasen	
+B Phase Dogs	Reyansh COLLEGE OF HOTEL MGMT	Abhishek Sharma	
+B Phase Dogs	Reyansh COLLEGE OF HOTEL MGMT	Axar Patel	VC
+B Phase Dogs	Reyansh COLLEGE OF HOTEL MGMT	Sanju Samson	C
+B Phase Dogs	Reyansh COLLEGE OF HOTEL MGMT	Glenn Phillips	
+B Phase Dogs	Reyansh COLLEGE OF HOTEL MGMT	Kagiso Rabada	
+B Phase Dogs	Reyansh COLLEGE OF HOTEL MGMT	Sam Curran	
+B Phase Dogs	Reyansh COLLEGE OF HOTEL MGMT	Glenn Maxwell	
+B Phase Dogs	Reyansh COLLEGE OF HOTEL MGMT	David Miller	
+B Phase Dogs	Reyansh COLLEGE OF HOTEL MGMT	Ravichandran Ashwin	
+B Phase Dogs	Reyansh COLLEGE OF HOTEL MGMT	Moeen Ali	
+B Phase Dogs	Reyansh COLLEGE OF HOTEL MGMT	Shimron Hetmyer	
+B Phase Dogs	Reyansh COLLEGE OF HOTEL MGMT	Ravisrinivasan Sai Kishore	
+B Phase Dogs	Reyansh COLLEGE OF HOTEL MGMT	Mahendra Singh Dhoni	
+B Phase Dogs	Reyansh COLLEGE OF HOTEL MGMT	Marco Jansen	
+B Phase Dogs	LunchVodkas of Deccan Andhra	Travis Head	VC
+B Phase Dogs	LunchVodkas of Deccan Andhra	Varun Chakaravarthy	
+B Phase Dogs	LunchVodkas of Deccan Andhra	Rinku Singh	
+B Phase Dogs	LunchVodkas of Deccan Andhra	Hardik Pandya	
+B Phase Dogs	LunchVodkas of Deccan Andhra	Virat Kohli	C
+B Phase Dogs	LunchVodkas of Deccan Andhra	Will Jacks	
+B Phase Dogs	LunchVodkas of Deccan Andhra	Ishan Kishan	
+B Phase Dogs	LunchVodkas of Deccan Andhra	Avesh Khan	
+B Phase Dogs	LunchVodkas of Deccan Andhra	Tristan Stubbs	
+B Phase Dogs	LunchVodkas of Deccan Andhra	Shashank Singh	
+B Phase Dogs	LunchVodkas of Deccan Andhra	Marcus Stoinis	
+B Phase Dogs	LunchVodkas of Deccan Andhra	Mohammed Shami	
+B Phase Dogs	LunchVodkas of Deccan Andhra	Bhuvneshwar Kumar	
+B Phase Dogs	LunchVodkas of Deccan Andhra	Mitchell Santner	
+B Phase Dogs	LunchVodkas of Deccan Andhra	Shahbaz Ahmed	
+B Phase Dogs	ROYAL CHALLENGERS DANBURY	Jasprit Bumrah	
+B Phase Dogs	ROYAL CHALLENGERS DANBURY	Pat Cummins	VC
+B Phase Dogs	ROYAL CHALLENGERS DANBURY	Nicholas Pooran	
+B Phase Dogs	ROYAL CHALLENGERS DANBURY	Matheesha Pathirana	
+B Phase Dogs	ROYAL CHALLENGERS DANBURY	Riyan Parag	
+B Phase Dogs	ROYAL CHALLENGERS DANBURY	Rishabh Pant	C
+B Phase Dogs	ROYAL CHALLENGERS DANBURY	Jake Fraser-McGurk	
+B Phase Dogs	ROYAL CHALLENGERS DANBURY	Sunil Narine	
+B Phase Dogs	ROYAL CHALLENGERS DANBURY	Harshit Rana	
+B Phase Dogs	ROYAL CHALLENGERS DANBURY	Prabhsimran Singh	
+B Phase Dogs	ROYAL CHALLENGERS DANBURY	Ramandeep Singh	
+B Phase Dogs	ROYAL CHALLENGERS DANBURY	Rahul Tripathi	
+B Phase Dogs	ROYAL CHALLENGERS DANBURY	Jacob Bethell	
+B Phase Dogs	ROYAL CHALLENGERS DANBURY	Azmatullah Omarzai	
+B Phase Dogs	ROYAL CHALLENGERS DANBURY	Washington Sundar	
+Rapid Yorkers	Striker Force XV	Shreyas Iyer	VC
+Rapid Yorkers	Striker Force XV	Rishabh Pant	C
+Rapid Yorkers	Striker Force XV	Ryan Rickelton	
+Rapid Yorkers	Striker Force XV	Venkatesh Iyer	
+Rapid Yorkers	Striker Force XV	Shivam Dube	
+Rapid Yorkers	Striker Force XV	Bhuvneshwar Kumar	
+Rapid Yorkers	Striker Force XV	Kuldeep Yadav	
+Rapid Yorkers	Striker Force XV	Angkrish Raghuvanshi	
+Rapid Yorkers	Striker Force XV	Rahul Tripathi	
+Rapid Yorkers	Striker Force XV	Shashank Singh	
+Rapid Yorkers	Striker Force XV	Aiden Markram	
+Rapid Yorkers	Striker Force XV	Harpreet Brar	
+Rapid Yorkers	Striker Force XV	Moeen Ali	
+Rapid Yorkers	Striker Force XV	Chetan Sakariya	
+Rapid Yorkers	Striker Force XV	Prasidh Krishna	
+Rapid Yorkers	Hawktuah 15	Tilak Varma	C
+Rapid Yorkers	Hawktuah 15	B Sai Sudharsan	VC
+Rapid Yorkers	Hawktuah 15	Tristan Stubbs	
+Rapid Yorkers	Hawktuah 15	Glenn Maxwell	
+Rapid Yorkers	Hawktuah 15	Harshal Patel	
+Rapid Yorkers	Hawktuah 15	Rinku Singh	
+Rapid Yorkers	Hawktuah 15	Rahmanullah Gurbaz	
+Rapid Yorkers	Hawktuah 15	Anshul Kamboj	
+Rapid Yorkers	Hawktuah 15	Marco Jansen	
+Rapid Yorkers	Hawktuah 15	Mohit Sharma	
+Rapid Yorkers	Hawktuah 15	Anukul Roy	
+Rapid Yorkers	Hawktuah 15	Thangarasu Natarajan	
+Rapid Yorkers	Hawktuah 15	Kamlesh Nagarkoti	
+Rapid Yorkers	Hawktuah 15	Noor Ahmad	
+Rapid Yorkers	Hawktuah 15	Ravisrinivasan Sai Kishore	
+Rapid Yorkers	Off Side	Suryakumar Yadav	
+Rapid Yorkers	Off Side	Travis Head	C
+Rapid Yorkers	Off Side	Rajat Patidar	
+Rapid Yorkers	Off Side	Ravindra Jadeja	
+Rapid Yorkers	Off Side	Nicholas Pooran	
+Rapid Yorkers	Off Side	Karun Nair	
+Rapid Yorkers	Off Side	Rashid Khan	
+Rapid Yorkers	Off Side	Ravi Bishnoi	
+Rapid Yorkers	Off Side	Marcus Stoinis	VC
+Rapid Yorkers	Off Side	Liam Livingstone	
+Rapid Yorkers	Off Side	Deepak Hooda	
+Rapid Yorkers	Off Side	Deepak Chahar	
+Rapid Yorkers	Off Side	Mukesh Kumar	
+Rapid Yorkers	Off Side	Avesh Khan	
+Rapid Yorkers	Off Side	Adam Zampa	
+Rapid Yorkers	No Balls, No Entry	Sunil Narine	C
+Rapid Yorkers	No Balls, No Entry	Rachin Ravindra	
+Rapid Yorkers	No Balls, No Entry	Sanju Samson	
+Rapid Yorkers	No Balls, No Entry	Pat Cummins	
+Rapid Yorkers	No Balls, No Entry	Ishan Kishan	VC
+Rapid Yorkers	No Balls, No Entry	Mohammed Shami	
+Rapid Yorkers	No Balls, No Entry	Mitchell Starc	
+Rapid Yorkers	No Balls, No Entry	Jos Buttler	
+Rapid Yorkers	No Balls, No Entry	Yuzvendra Chahal	
+Rapid Yorkers	No Balls, No Entry	Azmatullah Omarzai	
+Rapid Yorkers	No Balls, No Entry	Mohammed Siraj	
+Rapid Yorkers	No Balls, No Entry	Harshit Rana	
+Rapid Yorkers	No Balls, No Entry	Mitchell Santner	
+Rapid Yorkers	No Balls, No Entry	Rahul Chahar	
+Rapid Yorkers	No Balls, No Entry	Josh Hazlewood	
+Rapid Yorkers	Full Toss 15	Yashasvi Jaiswal	C
+Rapid Yorkers	Full Toss 15	Hardik Pandya	VC
+Rapid Yorkers	Full Toss 15	Heinrich Klaasen	
+Rapid Yorkers	Full Toss 15	Philip Salt	
+Rapid Yorkers	Full Toss 15	Faf Du Plessis	
+Rapid Yorkers	Full Toss 15	Quinton de Kock	
+Rapid Yorkers	Full Toss 15	Trent Boult	
+Rapid Yorkers	Full Toss 15	Prabhsimran Singh	
+Rapid Yorkers	Full Toss 15	Jake Fraser-McGurk	
+Rapid Yorkers	Full Toss 15	Glenn Phillips	
+Rapid Yorkers	Full Toss 15	Jitesh Sharma	
+Rapid Yorkers	Full Toss 15	Will Jacks	
+Rapid Yorkers	Full Toss 15	Washington Sundar	
+Rapid Yorkers	Full Toss 15	Josh Inglis	
+Rapid Yorkers	Full Toss 15	Sandeep Sharma	
+Rapid Yorkers	Full Cover	Virat Kohli	C
+Rapid Yorkers	Full Cover	Abhishek Sharma	VC
+Rapid Yorkers	Full Cover	Axar Patel	
+Rapid Yorkers	Full Cover	Ruturaj Gaikwad	
+Rapid Yorkers	Full Cover	Nitish Kumar Reddy	
+Rapid Yorkers	Full Cover	Riyan Parag	
+Rapid Yorkers	Full Cover	Ajinkya Rahane	
+Rapid Yorkers	Full Cover	Matheesha Pathirana	
+Rapid Yorkers	Full Cover	Abhishek Porel	
+Rapid Yorkers	Full Cover	Mitchell Marsh	
+Rapid Yorkers	Full Cover	Nitish Rana	
+Rapid Yorkers	Full Cover	Ramandeep Singh	
+Rapid Yorkers	Full Cover	David Miller	
+Rapid Yorkers	Full Cover	Shimron Hetmyer	
+Rapid Yorkers	Full Cover	Dhruv Jurel	
+Rapid Yorkers	Extra Cover	Andre Russell	
+Rapid Yorkers	Extra Cover	Varun Chakaravarthy	VC
+Rapid Yorkers	Extra Cover	Shubman Gill	C
+Rapid Yorkers	Extra Cover	Rohit Sharma	
+Rapid Yorkers	Extra Cover	Lokesh Rahul	
+Rapid Yorkers	Extra Cover	Sam Curran	
+Rapid Yorkers	Extra Cover	Kagiso Rabada	
+Rapid Yorkers	Extra Cover	Krunal Pandya	
+Rapid Yorkers	Extra Cover	Arshdeep Singh	
+Rapid Yorkers	Extra Cover	Manish Pandey	
+Rapid Yorkers	Extra Cover	Tim David	
+Rapid Yorkers	Extra Cover	Ravichandran Ashwin	
+Rapid Yorkers	Extra Cover	Abdul Samad	
+Rapid Yorkers	Extra Cover	Devdutt Padikkal	
+Rapid Yorkers	Extra Cover	Devon Conway	

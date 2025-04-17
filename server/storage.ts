@@ -573,58 +573,93 @@ export class DatabaseStorage implements IStorage {
 
   // Matches operations
   async getMatches(): Promise<Match[]> {
-    const result = await db.select({
-      match: matches,
-      team1: iplTeams,
-      team2: iplTeams,
-      winner: iplTeams
-    })
-    .from(matches)
-    .leftJoin(iplTeams, eq(matches.team1Id, iplTeams.id), { as: "team1" })
-    .leftJoin(iplTeams, eq(matches.team2Id, iplTeams.id), { as: "team2" })
-    .leftJoin(iplTeams, eq(matches.winnerId, iplTeams.id), { as: "winner" });
-
-    return result.map(({ match, team1, team2, winner }) => ({
-      ...match,
-      team1,
-      team2,
-      winner
-    }));
+    try {
+      // Simply fetch all matches first
+      const allMatches = await db.select().from(matches);
+      
+      if (allMatches.length === 0) {
+        return [];
+      }
+      
+      // Then fetch all teams
+      const allTeams = await db.select().from(iplTeams);
+      
+      // Create a map for quick team lookups
+      const teamsMap = new Map(allTeams.map(team => [team.id, team]));
+      
+      // Enrich the matches with team data
+      return allMatches.map(match => ({
+        ...match,
+        team1: teamsMap.get(match.team1Id) || null,
+        team2: teamsMap.get(match.team2Id) || null,
+        winner: match.winnerId ? teamsMap.get(match.winnerId) || null : null
+      }));
+    } catch (error) {
+      console.error("Error fetching matches:", error);
+      return [];
+    }
   }
 
   async getMatch(id: number): Promise<Match | undefined> {
-    const result = await db.select({
-      match: matches,
-      team1: iplTeams,
-      team2: iplTeams,
-      winner: iplTeams
-    })
-    .from(matches)
-    .leftJoin(iplTeams, eq(matches.team1Id, iplTeams.id), { as: "team1" })
-    .leftJoin(iplTeams, eq(matches.team2Id, iplTeams.id), { as: "team2" })
-    .leftJoin(iplTeams, eq(matches.winnerId, iplTeams.id), { as: "winner" })
-    .where(eq(matches.id, id));
-
-    if (result.length === 0) return undefined;
-    
-    const { match, team1, team2, winner } = result[0];
-    return {
-      ...match,
-      team1,
-      team2,
-      winner
-    };
+    try {
+      // First fetch the match
+      const matchResult = await db.select().from(matches).where(eq(matches.id, id)).limit(1);
+      
+      if (matchResult.length === 0) {
+        return undefined;
+      }
+      
+      const match = matchResult[0];
+      
+      // Then fetch the related teams
+      const team1Result = await db.select().from(iplTeams).where(eq(iplTeams.id, match.team1Id)).limit(1);
+      const team2Result = await db.select().from(iplTeams).where(eq(iplTeams.id, match.team2Id)).limit(1);
+      
+      const team1 = team1Result.length > 0 ? team1Result[0] : null;
+      const team2 = team2Result.length > 0 ? team2Result[0] : null;
+      
+      let winner = null;
+      if (match.winnerId) {
+        const winnerResult = await db.select().from(iplTeams).where(eq(iplTeams.id, match.winnerId)).limit(1);
+        winner = winnerResult.length > 0 ? winnerResult[0] : null;
+      }
+      
+      return {
+        ...match,
+        team1,
+        team2,
+        winner
+      };
+    } catch (error) {
+      console.error(`Error fetching match with id ${id}:`, error);
+      return undefined;
+    }
   }
 
   async getRecentMatches(limit: number): Promise<Match[]> {
     try {
+      // First get the basic match data
       const matchesData = await db.select()
         .from(matches)
         .where(eq(matches.isCompleted, true))
         .orderBy(desc(matches.date))
         .limit(limit);
       
-      return matchesData;
+      if (matchesData.length === 0) {
+        return [];
+      }
+      
+      // Then fetch all the teams for these matches
+      const teamsData = await db.select().from(iplTeams);
+      const teamsMap = new Map(teamsData.map(team => [team.id, team]));
+      
+      // Enrich the matches with team data
+      return matchesData.map(match => ({
+        ...match,
+        team1: teamsMap.get(match.team1Id) || null,
+        team2: teamsMap.get(match.team2Id) || null,
+        winner: match.winnerId ? teamsMap.get(match.winnerId) || null : null
+      }));
     } catch (error) {
       console.error("Error fetching recent matches:", error);
       return [];
@@ -635,6 +670,7 @@ export class DatabaseStorage implements IStorage {
     try {
       const now = new Date();
       
+      // First get the basic match data
       const matchesData = await db.select()
         .from(matches)
         .where(and(
@@ -644,7 +680,21 @@ export class DatabaseStorage implements IStorage {
         .orderBy(asc(matches.date))
         .limit(limit);
       
-      return matchesData;
+      if (matchesData.length === 0) {
+        return [];
+      }
+      
+      // Then fetch all the teams for these matches
+      const teamsData = await db.select().from(iplTeams);
+      const teamsMap = new Map(teamsData.map(team => [team.id, team]));
+      
+      // Enrich the matches with team data
+      return matchesData.map(match => ({
+        ...match,
+        team1: teamsMap.get(match.team1Id) || null,
+        team2: teamsMap.get(match.team2Id) || null,
+        winner: match.winnerId ? teamsMap.get(match.winnerId) || null : null
+      }));
     } catch (error) {
       console.error("Error fetching upcoming matches:", error);
       return [];
