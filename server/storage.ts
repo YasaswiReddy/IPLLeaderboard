@@ -649,13 +649,6 @@ export class DatabaseStorage implements IStorage {
       console.error("Error fetching upcoming matches:", error);
       return [];
     }
-
-    return result.map(({ match, team1, team2, winner }) => ({
-      ...match,
-      team1,
-      team2,
-      winner
-    }));
   }
 
   async createMatch(match: InsertMatch): Promise<Match> {
