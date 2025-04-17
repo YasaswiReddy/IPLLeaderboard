@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, real, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, real, timestamp, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { relations } from "drizzle-orm";
 import { z } from "zod";
@@ -19,6 +19,44 @@ export const insertUserSchema = createInsertSchema(users).pick({
   name: true,
   email: true,
   teamName: true,
+});
+
+// Leagues
+export const leagues = pgTable("leagues", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull().unique(),
+  description: text("description"),
+  startDate: timestamp("start_date"),
+  endDate: timestamp("end_date"),
+  isActive: boolean("is_active").default(true),
+  maxTeams: integer("max_teams").default(10),
+  maxPlayersPerTeam: integer("max_players_per_team").default(15),
+});
+
+export const insertLeagueSchema = createInsertSchema(leagues).pick({
+  name: true,
+  description: true,
+  startDate: true,
+  endDate: true,
+  isActive: true,
+  maxTeams: true,
+  maxPlayersPerTeam: true,
+});
+
+// Points System
+export const pointsSystem = pgTable("points_system", {
+  id: serial("id").primaryKey(),
+  leagueId: integer("league_id").notNull(),
+  name: text("name").notNull(),
+  description: text("description"),
+  rulesConfig: jsonb("rules_config").notNull(),
+});
+
+export const insertPointsSystemSchema = createInsertSchema(pointsSystem).pick({
+  leagueId: true,
+  name: true,
+  description: true,
+  rulesConfig: true,
 });
 
 // IPL Teams
@@ -136,7 +174,8 @@ export const insertPerformanceSchema = createInsertSchema(performances).pick({
 // Fantasy teams
 export const fantasyTeams = pgTable("fantasy_teams", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id").notNull(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  leagueId: integer("league_id").references(() => leagues.id),
   name: text("name").notNull(),
   totalPoints: integer("total_points").default(0),
   weeklyPoints: integer("weekly_points").default(0),
@@ -146,6 +185,7 @@ export const fantasyTeams = pgTable("fantasy_teams", {
 
 export const insertFantasyTeamSchema = createInsertSchema(fantasyTeams).pick({
   userId: true,
+  leagueId: true,
   name: true,
   totalPoints: true,
   weeklyPoints: true,
@@ -156,8 +196,8 @@ export const insertFantasyTeamSchema = createInsertSchema(fantasyTeams).pick({
 // Fantasy team players
 export const fantasyTeamPlayers = pgTable("fantasy_team_players", {
   id: serial("id").primaryKey(),
-  fantasyTeamId: integer("fantasy_team_id").notNull(),
-  playerId: integer("player_id").notNull(),
+  fantasyTeamId: integer("fantasy_team_id").notNull().references(() => fantasyTeams.id),
+  playerId: integer("player_id").notNull().references(() => players.id),
   isCaptain: boolean("is_captain").default(false),
   isViceCaptain: boolean("is_vice_captain").default(false),
 });
@@ -171,9 +211,18 @@ export const insertFantasyTeamPlayerSchema = createInsertSchema(fantasyTeamPlaye
 
 // Relations
 export const usersRelations = relations(users, ({ one, many }) => ({
-  fantasyTeam: one(fantasyTeams, {
-    fields: [users.id],
-    references: [fantasyTeams.userId],
+  fantasyTeams: many(fantasyTeams),
+}));
+
+export const leaguesRelations = relations(leagues, ({ one, many }) => ({
+  pointsSystems: many(pointsSystem),
+  fantasyTeams: many(fantasyTeams),
+}));
+
+export const pointsSystemRelations = relations(pointsSystem, ({ one }) => ({
+  league: one(leagues, {
+    fields: [pointsSystem.leagueId],
+    references: [leagues.id],
   }),
 }));
 
@@ -236,6 +285,10 @@ export const fantasyTeamsRelations = relations(fantasyTeams, ({ one, many }) => 
     fields: [fantasyTeams.userId],
     references: [users.id],
   }),
+  league: one(leagues, {
+    fields: [fantasyTeams.leagueId],
+    references: [leagues.id],
+  }),
   players: many(fantasyTeamPlayers),
 }));
 
@@ -253,6 +306,12 @@ export const fantasyTeamPlayersRelations = relations(fantasyTeamPlayers, ({ one 
 // Export types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
+
+export type League = typeof leagues.$inferSelect;
+export type InsertLeague = z.infer<typeof insertLeagueSchema>;
+
+export type PointsSystem = typeof pointsSystem.$inferSelect;
+export type InsertPointsSystem = z.infer<typeof insertPointsSystemSchema>;
 
 export type IplTeam = typeof iplTeams.$inferSelect;
 export type InsertIplTeam = z.infer<typeof insertIplTeamSchema>;
