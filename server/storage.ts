@@ -435,4 +435,454 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+import { db } from './db';
+import { eq, desc, asc, and, like, gte, lte, sql } from 'drizzle-orm';
+
+export class DatabaseStorage implements IStorage {
+  // User operations
+  async getUsers(): Promise<User[]> {
+    return db.select().from(users);
+  }
+
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
+  }
+
+  async createUser(user: InsertUser): Promise<User> {
+    const [newUser] = await db.insert(users).values(user).returning();
+    return newUser;
+  }
+
+  // IPL Teams operations
+  async getIplTeams(): Promise<IplTeam[]> {
+    return db.select().from(iplTeams);
+  }
+
+  async getIplTeam(id: number): Promise<IplTeam | undefined> {
+    const [team] = await db.select().from(iplTeams).where(eq(iplTeams.id, id));
+    return team;
+  }
+
+  async createIplTeam(team: InsertIplTeam): Promise<IplTeam> {
+    const [newTeam] = await db.insert(iplTeams).values(team).returning();
+    return newTeam;
+  }
+
+  // Player roles operations
+  async getPlayerRoles(): Promise<PlayerRole[]> {
+    return db.select().from(playerRoles);
+  }
+
+  async getPlayerRole(id: number): Promise<PlayerRole | undefined> {
+    const [role] = await db.select().from(playerRoles).where(eq(playerRoles.id, id));
+    return role;
+  }
+
+  async createPlayerRole(role: InsertPlayerRole): Promise<PlayerRole> {
+    const [newRole] = await db.insert(playerRoles).values(role).returning();
+    return newRole;
+  }
+
+  // Players operations
+  async getPlayers(): Promise<Player[]> {
+    const result = await db.select({
+      player: players,
+      team: iplTeams,
+      role: playerRoles
+    })
+    .from(players)
+    .leftJoin(iplTeams, eq(players.iplTeamId, iplTeams.id))
+    .leftJoin(playerRoles, eq(players.roleId, playerRoles.id));
+
+    return result.map(({ player, team, role }) => ({
+      ...player,
+      team,
+      role
+    }));
+  }
+
+  async getPlayer(id: number): Promise<Player | undefined> {
+    const result = await db.select({
+      player: players,
+      team: iplTeams,
+      role: playerRoles
+    })
+    .from(players)
+    .leftJoin(iplTeams, eq(players.iplTeamId, iplTeams.id))
+    .leftJoin(playerRoles, eq(players.roleId, playerRoles.id))
+    .where(eq(players.id, id));
+
+    if (result.length === 0) return undefined;
+    
+    const { player, team, role } = result[0];
+    return {
+      ...player,
+      team,
+      role
+    };
+  }
+
+  async getPlayersByTeam(teamId: number): Promise<Player[]> {
+    const result = await db.select({
+      player: players,
+      team: iplTeams,
+      role: playerRoles
+    })
+    .from(players)
+    .leftJoin(iplTeams, eq(players.iplTeamId, iplTeams.id))
+    .leftJoin(playerRoles, eq(players.roleId, playerRoles.id))
+    .where(eq(players.iplTeamId, teamId));
+
+    return result.map(({ player, team, role }) => ({
+      ...player,
+      team,
+      role
+    }));
+  }
+
+  async createPlayer(player: InsertPlayer): Promise<Player> {
+    const [newPlayer] = await db.insert(players).values(player).returning();
+    return newPlayer;
+  }
+
+  async searchPlayers(query: string): Promise<Player[]> {
+    const searchTerm = `%${query}%`;
+    
+    const result = await db.select({
+      player: players,
+      team: iplTeams,
+      role: playerRoles
+    })
+    .from(players)
+    .leftJoin(iplTeams, eq(players.iplTeamId, iplTeams.id))
+    .leftJoin(playerRoles, eq(players.roleId, playerRoles.id))
+    .where(like(players.name, searchTerm));
+
+    return result.map(({ player, team, role }) => ({
+      ...player,
+      team,
+      role
+    }));
+  }
+
+  // Matches operations
+  async getMatches(): Promise<Match[]> {
+    const result = await db.select({
+      match: matches,
+      team1: iplTeams,
+      team2: iplTeams,
+      winner: iplTeams
+    })
+    .from(matches)
+    .leftJoin(iplTeams, eq(matches.team1Id, iplTeams.id), { as: "team1" })
+    .leftJoin(iplTeams, eq(matches.team2Id, iplTeams.id), { as: "team2" })
+    .leftJoin(iplTeams, eq(matches.winnerId, iplTeams.id), { as: "winner" });
+
+    return result.map(({ match, team1, team2, winner }) => ({
+      ...match,
+      team1,
+      team2,
+      winner
+    }));
+  }
+
+  async getMatch(id: number): Promise<Match | undefined> {
+    const result = await db.select({
+      match: matches,
+      team1: iplTeams,
+      team2: iplTeams,
+      winner: iplTeams
+    })
+    .from(matches)
+    .leftJoin(iplTeams, eq(matches.team1Id, iplTeams.id), { as: "team1" })
+    .leftJoin(iplTeams, eq(matches.team2Id, iplTeams.id), { as: "team2" })
+    .leftJoin(iplTeams, eq(matches.winnerId, iplTeams.id), { as: "winner" })
+    .where(eq(matches.id, id));
+
+    if (result.length === 0) return undefined;
+    
+    const { match, team1, team2, winner } = result[0];
+    return {
+      ...match,
+      team1,
+      team2,
+      winner
+    };
+  }
+
+  async getRecentMatches(limit: number): Promise<Match[]> {
+    const result = await db.select({
+      match: matches,
+      team1: iplTeams,
+      team2: iplTeams,
+      winner: iplTeams
+    })
+    .from(matches)
+    .leftJoin(iplTeams, eq(matches.team1Id, iplTeams.id), { as: "team1" })
+    .leftJoin(iplTeams, eq(matches.team2Id, iplTeams.id), { as: "team2" })
+    .leftJoin(iplTeams, eq(matches.winnerId, iplTeams.id), { as: "winner" })
+    .where(eq(matches.isCompleted, true))
+    .orderBy(desc(matches.date))
+    .limit(limit);
+
+    return result.map(({ match, team1, team2, winner }) => ({
+      ...match,
+      team1,
+      team2,
+      winner
+    }));
+  }
+
+  async getUpcomingMatches(limit: number): Promise<Match[]> {
+    const now = new Date().toISOString();
+    
+    const result = await db.select({
+      match: matches,
+      team1: iplTeams,
+      team2: iplTeams,
+      winner: iplTeams
+    })
+    .from(matches)
+    .leftJoin(iplTeams, eq(matches.team1Id, iplTeams.id), { as: "team1" })
+    .leftJoin(iplTeams, eq(matches.team2Id, iplTeams.id), { as: "team2" })
+    .leftJoin(iplTeams, eq(matches.winnerId, iplTeams.id), { as: "winner" })
+    .where(and(
+      eq(matches.isCompleted, false),
+      gte(matches.date, now)
+    ))
+    .orderBy(asc(matches.date))
+    .limit(limit);
+
+    return result.map(({ match, team1, team2, winner }) => ({
+      ...match,
+      team1,
+      team2,
+      winner
+    }));
+  }
+
+  async createMatch(match: InsertMatch): Promise<Match> {
+    const [newMatch] = await db.insert(matches).values(match).returning();
+    return newMatch;
+  }
+
+  // Performances operations
+  async getPerformances(): Promise<Performance[]> {
+    const result = await db.select({
+      performance: performances,
+      player: players
+    })
+    .from(performances)
+    .leftJoin(players, eq(performances.playerId, players.id));
+
+    return result.map(({ performance, player }) => ({
+      ...performance,
+      player
+    }));
+  }
+
+  async getPerformance(id: number): Promise<Performance | undefined> {
+    const result = await db.select({
+      performance: performances,
+      player: players
+    })
+    .from(performances)
+    .leftJoin(players, eq(performances.playerId, players.id))
+    .where(eq(performances.id, id));
+
+    if (result.length === 0) return undefined;
+    
+    const { performance, player } = result[0];
+    return {
+      ...performance,
+      player
+    };
+  }
+
+  async getPlayerPerformances(playerId: number): Promise<Performance[]> {
+    const result = await db.select({
+      performance: performances,
+      player: players
+    })
+    .from(performances)
+    .leftJoin(players, eq(performances.playerId, players.id))
+    .where(eq(performances.playerId, playerId))
+    .orderBy(desc(performances.id));  // Assuming newest performances have higher IDs
+
+    return result.map(({ performance, player }) => ({
+      ...performance,
+      player
+    }));
+  }
+
+  async getMatchPerformances(matchId: number): Promise<Performance[]> {
+    const result = await db.select({
+      performance: performances,
+      player: players
+    })
+    .from(performances)
+    .leftJoin(players, eq(performances.playerId, players.id))
+    .where(eq(performances.matchId, matchId));
+
+    return result.map(({ performance, player }) => ({
+      ...performance,
+      player
+    }));
+  }
+
+  async getTopPerformances(limit: number): Promise<{performance: Performance, player: Player}[]> {
+    const result = await db.select({
+      performance: performances,
+      player: players
+    })
+    .from(performances)
+    .leftJoin(players, eq(performances.playerId, players.id))
+    .orderBy(desc(performances.fantasyPoints))
+    .limit(limit);
+
+    return result.map(({ performance, player }) => ({
+      performance,
+      player
+    }));
+  }
+
+  async createPerformance(performance: InsertPerformance): Promise<Performance> {
+    const [newPerformance] = await db.insert(performances).values(performance).returning();
+    return newPerformance;
+  }
+
+  // Fantasy teams operations
+  async getFantasyTeams(): Promise<FantasyTeam[]> {
+    const result = await db.select({
+      fantasyTeam: fantasyTeams,
+      user: users
+    })
+    .from(fantasyTeams)
+    .leftJoin(users, eq(fantasyTeams.userId, users.id));
+
+    return result.map(({ fantasyTeam, user }) => ({
+      ...fantasyTeam,
+      user
+    }));
+  }
+
+  async getFantasyTeam(id: number): Promise<FantasyTeam | undefined> {
+    const result = await db.select({
+      fantasyTeam: fantasyTeams,
+      user: users
+    })
+    .from(fantasyTeams)
+    .leftJoin(users, eq(fantasyTeams.userId, users.id))
+    .where(eq(fantasyTeams.id, id));
+
+    if (result.length === 0) return undefined;
+    
+    const { fantasyTeam, user } = result[0];
+    return {
+      ...fantasyTeam,
+      user
+    };
+  }
+
+  async getUserFantasyTeam(userId: number): Promise<FantasyTeam | undefined> {
+    const result = await db.select({
+      fantasyTeam: fantasyTeams,
+      user: users
+    })
+    .from(fantasyTeams)
+    .leftJoin(users, eq(fantasyTeams.userId, users.id))
+    .where(eq(fantasyTeams.userId, userId));
+
+    if (result.length === 0) return undefined;
+    
+    const { fantasyTeam, user } = result[0];
+    return {
+      ...fantasyTeam,
+      user
+    };
+  }
+
+  async getFantasyLeaderboard(): Promise<(FantasyTeam & { user: User })[]> {
+    const result = await db.select({
+      fantasyTeam: fantasyTeams,
+      user: users
+    })
+    .from(fantasyTeams)
+    .leftJoin(users, eq(fantasyTeams.userId, users.id))
+    .orderBy(desc(fantasyTeams.totalPoints));
+    
+    // Calculate ranks
+    let currentRank = 1;
+    let prevPoints = -1;
+    let rankOffset = 0;
+    
+    const leaderboard = result.map(({ fantasyTeam, user }, index) => {
+      // If points are the same, assign same rank
+      if (prevPoints === fantasyTeam.totalPoints) {
+        rankOffset++;
+      } else {
+        currentRank = index + 1;
+        rankOffset = 0;
+        prevPoints = fantasyTeam.totalPoints;
+      }
+      
+      return {
+        ...fantasyTeam,
+        user,
+        rank: currentRank - rankOffset
+      };
+    });
+    
+    return leaderboard;
+  }
+
+  async createFantasyTeam(team: InsertFantasyTeam): Promise<FantasyTeam> {
+    const [newTeam] = await db.insert(fantasyTeams).values(team).returning();
+    return newTeam;
+  }
+
+  async updateFantasyTeamPoints(id: number, totalPoints: number, weeklyPoints: number): Promise<FantasyTeam> {
+    const [updatedTeam] = await db.update(fantasyTeams)
+      .set({ totalPoints, weeklyPoints })
+      .where(eq(fantasyTeams.id, id))
+      .returning();
+    return updatedTeam;
+  }
+
+  // Fantasy team players operations
+  async getFantasyTeamPlayers(teamId: number): Promise<(FantasyTeamPlayer & { player: Player })[]> {
+    const result = await db.select({
+      fantasyTeamPlayer: fantasyTeamPlayers,
+      player: players
+    })
+    .from(fantasyTeamPlayers)
+    .leftJoin(players, eq(fantasyTeamPlayers.playerId, players.id))
+    .where(eq(fantasyTeamPlayers.teamId, teamId));
+
+    return result.map(({ fantasyTeamPlayer, player }) => ({
+      ...fantasyTeamPlayer,
+      player
+    }));
+  }
+
+  async addPlayerToFantasyTeam(teamPlayer: InsertFantasyTeamPlayer): Promise<FantasyTeamPlayer> {
+    const [newTeamPlayer] = await db.insert(fantasyTeamPlayers).values(teamPlayer).returning();
+    return newTeamPlayer;
+  }
+
+  async removePlayerFromFantasyTeam(teamId: number, playerId: number): Promise<void> {
+    await db.delete(fantasyTeamPlayers)
+      .where(and(
+        eq(fantasyTeamPlayers.teamId, teamId),
+        eq(fantasyTeamPlayers.playerId, playerId)
+      ));
+  }
+}
+
+export const storage = new DatabaseStorage();

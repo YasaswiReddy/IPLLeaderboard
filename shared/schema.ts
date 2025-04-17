@@ -1,5 +1,6 @@
 import { pgTable, text, serial, integer, boolean, real, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
+import { relations } from "drizzle-orm";
 import { z } from "zod";
 
 // User schema (fantasy team managers)
@@ -167,6 +168,87 @@ export const insertFantasyTeamPlayerSchema = createInsertSchema(fantasyTeamPlaye
   isCaptain: true,
   isViceCaptain: true,
 });
+
+// Relations
+export const usersRelations = relations(users, ({ one, many }) => ({
+  fantasyTeam: one(fantasyTeams, {
+    fields: [users.id],
+    references: [fantasyTeams.userId],
+  }),
+}));
+
+export const iplTeamsRelations = relations(iplTeams, ({ many }) => ({
+  players: many(players),
+  team1Matches: many(matches, { relationName: "team1" }),
+  team2Matches: many(matches, { relationName: "team2" }),
+  wonMatches: many(matches, { relationName: "winner" }),
+}));
+
+export const playerRolesRelations = relations(playerRoles, ({ many }) => ({
+  players: many(players),
+}));
+
+export const playersRelations = relations(players, ({ one, many }) => ({
+  team: one(iplTeams, {
+    fields: [players.iplTeamId],
+    references: [iplTeams.id],
+  }),
+  role: one(playerRoles, {
+    fields: [players.roleId],
+    references: [playerRoles.id],
+  }),
+  performances: many(performances),
+  fantasyTeamPlayers: many(fantasyTeamPlayers),
+}));
+
+export const matchesRelations = relations(matches, ({ one, many }) => ({
+  team1: one(iplTeams, {
+    fields: [matches.team1Id],
+    references: [iplTeams.id],
+    relationName: "team1",
+  }),
+  team2: one(iplTeams, {
+    fields: [matches.team2Id],
+    references: [iplTeams.id],
+    relationName: "team2",
+  }),
+  winner: one(iplTeams, {
+    fields: [matches.winnerId],
+    references: [iplTeams.id],
+    relationName: "winner",
+  }),
+  performances: many(performances),
+}));
+
+export const performancesRelations = relations(performances, ({ one }) => ({
+  match: one(matches, {
+    fields: [performances.matchId],
+    references: [matches.id],
+  }),
+  player: one(players, {
+    fields: [performances.playerId],
+    references: [players.id],
+  }),
+}));
+
+export const fantasyTeamsRelations = relations(fantasyTeams, ({ one, many }) => ({
+  user: one(users, {
+    fields: [fantasyTeams.userId],
+    references: [users.id],
+  }),
+  players: many(fantasyTeamPlayers),
+}));
+
+export const fantasyTeamPlayersRelations = relations(fantasyTeamPlayers, ({ one }) => ({
+  fantasyTeam: one(fantasyTeams, {
+    fields: [fantasyTeamPlayers.fantasyTeamId],
+    references: [fantasyTeams.id],
+  }),
+  player: one(players, {
+    fields: [fantasyTeamPlayers.playerId],
+    references: [players.id],
+  }),
+}));
 
 // Export types
 export type User = typeof users.$inferSelect;
