@@ -617,47 +617,38 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getRecentMatches(limit: number): Promise<Match[]> {
-    const result = await db.select({
-      match: matches,
-      team1: iplTeams,
-      team2: iplTeams,
-      winner: iplTeams
-    })
-    .from(matches)
-    .leftJoin(iplTeams, eq(matches.team1Id, iplTeams.id), { as: "team1" })
-    .leftJoin(iplTeams, eq(matches.team2Id, iplTeams.id), { as: "team2" })
-    .leftJoin(iplTeams, eq(matches.winnerId, iplTeams.id), { as: "winner" })
-    .where(eq(matches.isCompleted, true))
-    .orderBy(desc(matches.date))
-    .limit(limit);
-
-    return result.map(({ match, team1, team2, winner }) => ({
-      ...match,
-      team1,
-      team2,
-      winner
-    }));
+    try {
+      const matchesData = await db.select()
+        .from(matches)
+        .where(eq(matches.isCompleted, true))
+        .orderBy(desc(matches.date))
+        .limit(limit);
+      
+      return matchesData;
+    } catch (error) {
+      console.error("Error fetching recent matches:", error);
+      return [];
+    }
   }
 
   async getUpcomingMatches(limit: number): Promise<Match[]> {
-    const now = new Date().toISOString();
-    
-    const result = await db.select({
-      match: matches,
-      team1: iplTeams,
-      team2: iplTeams,
-      winner: iplTeams
-    })
-    .from(matches)
-    .leftJoin(iplTeams, eq(matches.team1Id, iplTeams.id), { as: "team1" })
-    .leftJoin(iplTeams, eq(matches.team2Id, iplTeams.id), { as: "team2" })
-    .leftJoin(iplTeams, eq(matches.winnerId, iplTeams.id), { as: "winner" })
-    .where(and(
-      eq(matches.isCompleted, false),
-      gte(matches.date, now)
-    ))
-    .orderBy(asc(matches.date))
-    .limit(limit);
+    try {
+      const now = new Date();
+      
+      const matchesData = await db.select()
+        .from(matches)
+        .where(and(
+          eq(matches.isCompleted, false),
+          gte(matches.date, now)
+        ))
+        .orderBy(asc(matches.date))
+        .limit(limit);
+      
+      return matchesData;
+    } catch (error) {
+      console.error("Error fetching upcoming matches:", error);
+      return [];
+    }
 
     return result.map(({ match, team1, team2, winner }) => ({
       ...match,

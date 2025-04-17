@@ -104,6 +104,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         matches = await storage.getMatches();
       }
       
+      if (matches.length === 0) {
+        return res.json([]);
+      }
+      
       const teamsData = await storage.getIplTeams();
       const teams = new Map(teamsData.map(team => [team.id, team]));
       
@@ -116,6 +120,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.json(enrichedMatches);
     } catch (error) {
+      console.error("Error fetching matches:", error);
       res.status(500).json({ message: "Failed to fetch matches" });
     }
   });
@@ -171,23 +176,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const limit = parseInt(req.query.limit as string) || 3;
       const topPerformers = await storage.getTopPerformances(limit);
       
+      if (topPerformers.length === 0) {
+        return res.json([]);
+      }
+      
       const rolesData = await storage.getPlayerRoles();
       const teamsData = await storage.getIplTeams();
       
       const roles = new Map(rolesData.map(role => [role.id, role]));
       const teams = new Map(teamsData.map(team => [team.id, team]));
       
-      const enrichedPerformers = topPerformers.map(({ performance, player }) => ({
-        performance,
-        player: {
-          ...player,
-          team: teams.get(player.iplTeamId),
-          role: roles.get(player.roleId)
+      const enrichedPerformers = topPerformers.map(({ performance, player }) => {
+        if (!player) {
+          return null;
         }
-      }));
+        return {
+          performance,
+          player: {
+            ...player,
+            team: teams.get(player.iplTeamId),
+            role: roles.get(player.roleId)
+          }
+        };
+      }).filter(Boolean); // Filter out nulls
       
       res.json(enrichedPerformers);
     } catch (error) {
+      console.error("Error fetching top performers:", error);
       res.status(500).json({ message: "Failed to fetch top performers" });
     }
   });
@@ -195,7 +210,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get stats overview (for the dashboard)
   app.get(`${apiRouter}/stats-overview`, async (req, res) => {
     try {
-      const nextMatch = (await storage.getUpcomingMatches(1))[0];
+      const upcomingMatches = await storage.getUpcomingMatches(1);
+      const nextMatch = upcomingMatches.length > 0 ? upcomingMatches[0] : null;
       const teams = await storage.getIplTeams();
       const teamsMap = new Map(teams.map(team => [team.id, team]));
       
@@ -209,26 +225,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const leaderboard = await storage.getFantasyLeaderboard();
-      const currentLeader = leaderboard[0];
+      const currentLeader = leaderboard.length > 0 ? leaderboard[0] : null;
       
       const topPerformers = await storage.getTopPerformances(1);
-      const topScorer = topPerformers[0];
+      const topScorer = topPerformers.length > 0 ? topPerformers[0] : null;
       
-      const playerData = await storage.getPlayer(topScorer.player.id);
+      // Only fetch player data if we have a top scorer
+      let playerData = null;
+      if (topScorer && topScorer.player) {
+        playerData = await storage.getPlayer(topScorer.player.id);
+      }
       
       res.json({
         nextMatch: nextMatchData,
-        currentLeader: currentLeader ? {
+        currentLeader: currentLeader && currentLeader.user ? {
           name: currentLeader.name,
           managerName: currentLeader.user.name,
           points: currentLeader.totalPoints
         } : null,
-        topScorer: topScorer ? {
+        topScorer: topScorer && topScorer.player ? {
           name: topScorer.player.name,
           points: topScorer.performance.fantasyPoints
         } : null
       });
     } catch (error) {
+      console.error("Error fetching stats overview:", error);
       res.status(500).json({ message: "Failed to fetch stats overview" });
     }
   });
