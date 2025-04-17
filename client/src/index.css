@@ -2,12 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary: #D50032;
+  --primary-dark: #A50034;
+  --secondary-light: #F9C2C2;
+  --secondary-lighter: #FFB3BA;
+  --white: #FFFFFF;
+}
+
 @layer base {
   * {
     @apply border-border;
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased bg-gray-50 text-foreground;
+  }
+}
+
+@layer components {
+  .bg-cricket-gradient {
+    background: linear-gradient(to right, var(--primary), var(--primary-dark));
+  }
+  
+  .text-cricket-gradient {
+    background: linear-gradient(to right, var(--primary), var(--primary-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .btn-cricket {
+    @apply bg-gradient-to-r from-[var(--primary)] to-[var(--primary-dark)] text-white;
+  }
+  
+  .card-highlight {
+    @apply border-l-4 border-[var(--primary)];
   }
 }

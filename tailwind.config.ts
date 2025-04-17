@@ -24,10 +24,14 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          600: "#D50032",
+          700: "#A50034",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          100: "#FFB3BA",
+          200: "#F9C2C2",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
@@ -60,6 +64,12 @@ export default {
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
+        },
+        cricket: {
+          red: "#D50032",
+          burgundy: "#A50034",
+          pink: "#F9C2C2",
+          lightPink: "#FFB3BA",
         },
       },
       keyframes: {

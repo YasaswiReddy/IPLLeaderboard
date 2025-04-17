@@ -67,25 +67,25 @@ export default function LeaderboardTable({ currentUserId = 7 }: LeaderboardTable
           <TabsList className="flex h-auto bg-transparent p-0">
             <TabsTrigger 
               value="overall" 
-              className="px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:shadow-none rounded-none bg-transparent"
+              className="px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary-600 data-[state=active]:text-primary-600 data-[state=active]:shadow-none rounded-none bg-transparent"
             >
               Overall
             </TabsTrigger>
             <TabsTrigger 
               value="weekly" 
-              className="px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:shadow-none rounded-none bg-transparent"
+              className="px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary-600 data-[state=active]:text-primary-600 data-[state=active]:shadow-none rounded-none bg-transparent"
             >
               This Week
             </TabsTrigger>
             <TabsTrigger 
               value="friends" 
-              className="px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:shadow-none rounded-none bg-transparent"
+              className="px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary-600 data-[state=active]:text-primary-600 data-[state=active]:shadow-none rounded-none bg-transparent"
             >
               Friends
             </TabsTrigger>
             <TabsTrigger 
               value="league" 
-              className="px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:shadow-none rounded-none bg-transparent"
+              className="px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary-600 data-[state=active]:text-primary-600 data-[state=active]:shadow-none rounded-none bg-transparent"
             >
               My League
             </TabsTrigger>

@@ -30,9 +30,9 @@ export default function StatsOverview() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-      <div className="bg-white rounded-lg shadow p-5 flex items-center">
-        <div className="rounded-full bg-blue-100 p-3 mr-4">
-          <CalendarDays className="text-primary text-xl" />
+      <div className="bg-white rounded-lg shadow p-5 flex items-center card-highlight">
+        <div className="rounded-full bg-secondary-100 p-3 mr-4">
+          <CalendarDays className="text-primary-700 text-xl" />
         </div>
         <div>
           <p className="text-sm text-gray-500">Next Match</p>
@@ -49,9 +49,9 @@ export default function StatsOverview() {
         </div>
       </div>
       
-      <div className="bg-white rounded-lg shadow p-5 flex items-center">
-        <div className="rounded-full bg-green-100 p-3 mr-4">
-          <Crown className="text-green-600 text-xl" />
+      <div className="bg-white rounded-lg shadow p-5 flex items-center card-highlight">
+        <div className="rounded-full bg-secondary-200 p-3 mr-4">
+          <Crown className="text-primary-600 text-xl" />
         </div>
         <div>
           <p className="text-sm text-gray-500">Current Leader</p>
@@ -66,9 +66,9 @@ export default function StatsOverview() {
         </div>
       </div>
       
-      <div className="bg-white rounded-lg shadow p-5 flex items-center">
-        <div className="rounded-full bg-purple-100 p-3 mr-4">
-          <Zap className="text-purple-600 text-xl" />
+      <div className="bg-white rounded-lg shadow p-5 flex items-center card-highlight">
+        <div className="rounded-full bg-secondary-100 p-3 mr-4">
+          <Zap className="text-primary-600 text-xl" />
         </div>
         <div>
           <p className="text-sm text-gray-500">Top Scorer This Week</p>
