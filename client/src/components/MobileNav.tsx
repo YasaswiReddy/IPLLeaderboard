@@ -35,20 +35,20 @@ export default function MobileNav({ onClose }: MobileNavProps) {
         </div>
         
         <nav className="flex flex-col space-y-3">
-          <Link href="/">
-            <a className="p-2 hover:bg-gray-100 rounded" onClick={onClose}>Leaderboard</a>
+          <Link href="/" className="p-2 hover:bg-gray-100 rounded" onClick={onClose}>
+            Leaderboard
           </Link>
-          <Link href="/my-team">
-            <a className="p-2 hover:bg-gray-100 rounded" onClick={onClose}>My Team</a>
+          <Link href="/my-team" className="p-2 hover:bg-gray-100 rounded" onClick={onClose}>
+            My Team
           </Link>
-          <Link href="/players">
-            <a className="p-2 hover:bg-gray-100 rounded" onClick={onClose}>Players</a>
+          <Link href="/players" className="p-2 hover:bg-gray-100 rounded" onClick={onClose}>
+            Players
           </Link>
-          <Link href="/matches">
-            <a className="p-2 hover:bg-gray-100 rounded" onClick={onClose}>Matches</a>
+          <Link href="/matches" className="p-2 hover:bg-gray-100 rounded" onClick={onClose}>
+            Matches
           </Link>
-          <Link href="/rules">
-            <a className="p-2 hover:bg-gray-100 rounded" onClick={onClose}>Rules</a>
+          <Link href="/rules" className="p-2 hover:bg-gray-100 rounded" onClick={onClose}>
+            Rules
           </Link>
         </nav>
       </div>

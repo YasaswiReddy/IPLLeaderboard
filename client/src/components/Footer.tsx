@@ -19,20 +19,20 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-bold mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm text-secondary-100">
-              <li><Link href="/"><a className="hover:text-white">Leaderboard</a></Link></li>
-              <li><Link href="/players"><a className="hover:text-white">Player Stats</a></Link></li>
-              <li><Link href="/matches"><a className="hover:text-white">Match Schedule</a></Link></li>
-              <li><Link href="/rules"><a className="hover:text-white">Fantasy Rules</a></Link></li>
+              <li><Link href="/" className="hover:text-white">Leaderboard</Link></li>
+              <li><Link href="/players" className="hover:text-white">Player Stats</Link></li>
+              <li><Link href="/matches" className="hover:text-white">Match Schedule</Link></li>
+              <li><Link href="/rules" className="hover:text-white">Fantasy Rules</Link></li>
             </ul>
           </div>
           
           <div>
             <h4 className="text-lg font-bold mb-4">Help & Support</h4>
             <ul className="space-y-2 text-sm text-secondary-100">
-              <li><Link href="/how-to-play"><a className="hover:text-white">How to Play</a></Link></li>
-              <li><Link href="/faq"><a className="hover:text-white">FAQs</a></Link></li>
-              <li><Link href="/contact"><a className="hover:text-white">Contact Us</a></Link></li>
-              <li><Link href="/terms"><a className="hover:text-white">Terms of Service</a></Link></li>
+              <li><Link href="/how-to-play" className="hover:text-white">How to Play</Link></li>
+              <li><Link href="/faq" className="hover:text-white">FAQs</Link></li>
+              <li><Link href="/contact" className="hover:text-white">Contact Us</Link></li>
+              <li><Link href="/terms" className="hover:text-white">Terms of Service</Link></li>
             </ul>
           </div>
           
@@ -67,9 +67,9 @@ export default function Footer() {
         <div className="border-t border-primary-700/50 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-secondary-100">© 2025 IPL Fantasy. All rights reserved.</p>
           <div className="flex space-x-4 mt-4 md:mt-0">
-            <Link href="/privacy"><a className="text-sm text-secondary-100 hover:text-white">Privacy Policy</a></Link>
-            <Link href="/terms"><a className="text-sm text-secondary-100 hover:text-white">Terms of Service</a></Link>
-            <Link href="/cookies"><a className="text-sm text-secondary-100 hover:text-white">Cookie Policy</a></Link>
+            <Link href="/privacy" className="text-sm text-secondary-100 hover:text-white">Privacy Policy</Link>
+            <Link href="/terms" className="text-sm text-secondary-100 hover:text-white">Terms of Service</Link>
+            <Link href="/cookies" className="text-sm text-secondary-100 hover:text-white">Cookie Policy</Link>
           </div>
         </div>
       </div>

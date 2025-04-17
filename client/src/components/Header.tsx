@@ -26,20 +26,20 @@ export default function Header() {
           </Link>
           
           <div className="hidden md:flex items-center space-x-6">
-            <Link href="/">
-              <a className="hover:text-secondary-100 transition-colors">Leaderboard</a>
+            <Link href="/" className="hover:text-secondary-100 transition-colors">
+              Leaderboard
             </Link>
-            <Link href="/my-team">
-              <a className="hover:text-secondary-100 transition-colors">My Team</a>
+            <Link href="/my-team" className="hover:text-secondary-100 transition-colors">
+              My Team
             </Link>
-            <Link href="/players">
-              <a className="hover:text-secondary-100 transition-colors">Players</a>
+            <Link href="/players" className="hover:text-secondary-100 transition-colors">
+              Players
             </Link>
-            <Link href="/matches">
-              <a className="hover:text-secondary-100 transition-colors">Matches</a>
+            <Link href="/matches" className="hover:text-secondary-100 transition-colors">
+              Matches
             </Link>
-            <Link href="/rules">
-              <a className="hover:text-secondary-100 transition-colors">Rules</a>
+            <Link href="/rules" className="hover:text-secondary-100 transition-colors">
+              Rules
             </Link>
           </div>
           

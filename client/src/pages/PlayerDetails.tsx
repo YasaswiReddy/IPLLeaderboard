@@ -14,7 +14,7 @@ interface PlayerDetailsResponse extends Player {
 
 export default function PlayerDetails() {
   const { id } = useParams();
-  const playerId = parseInt(id);
+  const playerId = id ? parseInt(id) : 0;
   
   const { data, isLoading, error } = useQuery<PlayerDetailsResponse>({
     queryKey: [`/api/players/${playerId}`],
@@ -39,8 +39,8 @@ export default function PlayerDetails() {
         <main className="flex-grow container mx-auto px-4 py-8">
           <div className="bg-white rounded-lg shadow p-6">
             <p className="text-red-500">Error loading player details</p>
-            <Link href="/">
-              <a className="text-primary hover:underline mt-4 inline-block">Back to Home</a>
+            <Link href="/" className="text-primary-600 hover:underline mt-4 inline-block">
+              Back to Home
             </Link>
           </div>
         </main>
@@ -62,10 +62,8 @@ export default function PlayerDetails() {
       <Header />
       <main className="flex-grow container mx-auto px-4 py-6">
         <div className="mb-6">
-          <Link href="/">
-            <a className="text-primary hover:text-primary-dark flex items-center mb-4">
-              <ArrowLeft className="h-4 w-4 mr-1" /> Back to Leaderboard
-            </a>
+          <Link href="/" className="text-primary-600 hover:text-primary-700 flex items-center mb-4">
+            <ArrowLeft className="h-4 w-4 mr-1" /> Back to Leaderboard
           </Link>
           
           <div className="bg-white rounded-lg shadow overflow-hidden">
