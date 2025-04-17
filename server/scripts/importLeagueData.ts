@@ -1,11 +1,6 @@
 import { readFileSync } from 'fs';
 import { db } from '../db';
-import {
-  users, iplTeams, players, playerRoles, fantasyTeams, fantasyTeamPlayers, leagues, pointsSystem,
-  insertUserSchema, insertFantasyTeamSchema, insertFantasyTeamPlayerSchema, insertPlayerSchema, 
-  insertLeagueSchema, insertPointsSystemSchema
-} from '@shared/schema';
-import { eq, and } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 
 interface LeagueDataRow {
   Group: string;
@@ -58,150 +53,238 @@ async function importLeagueData() {
     
     console.log(`Found ${leagueData.length} player entries across leagues.`);
     
-    // Get unique leagues (Groups)
-    const leagues = [...new Set(leagueData.map(row => row.Group))];
-    console.log(`Found ${leagues.length} leagues: ${leagues.join(', ')}`);
+    // Get unique league names
+    const leagueSet = new Set<string>();
+    leagueData.forEach(row => leagueSet.add(row.Group));
+    const leagueNames = Array.from(leagueSet);
+    console.log(`Found ${leagueNames.length} leagues: ${leagueNames.join(', ')}`);
     
-    // Get unique teams
-    const teams = [...new Set(leagueData.map(row => `${row.Group}|${row.Team}`))];
-    console.log(`Found ${teams.length} fantasy teams across all leagues.`);
+    // Get unique teams with their leagues
+    const teamSet = new Set<string>();
+    leagueData.forEach(row => teamSet.add(`${row.Group}|${row.Team}`));
+    const teamMapping = Array.from(teamSet).map(t => {
+      const [leagueName, teamName] = t.split('|');
+      return { leagueName, teamName };
+    });
+    console.log(`Found ${teamMapping.length} fantasy teams across all leagues.`);
     
-    // Get unique players
-    const playerNames = [...new Set(leagueData.map(row => row.Player))];
+    // Get unique player names
+    const playerSet = new Set<string>();
+    leagueData.forEach(row => playerSet.add(row.Player));
+    const playerNames = Array.from(playerSet);
     console.log(`Found ${playerNames.length} unique players.`);
     
-    // Step 1: Ensure we have the necessary player role
-    let batsmanRoleId = 1; // Default to first role if exists
-    const battersRole = await db.select().from(playerRoles).where(eq(playerRoles.name, 'Batsman')).limit(1);
-    if (battersRole.length > 0) {
-      batsmanRoleId = battersRole[0].id;
-    }
-    
-    // Step 2: Create or find a default IPL team for players not in the database
-    let defaultTeamId = 1; // Default to first team if exists
-    const defaultTeam = await db.select().from(iplTeams).limit(1);
-    if (defaultTeam.length > 0) {
-      defaultTeamId = defaultTeam[0].id;
-    }
-    
-    // Step 3: Create a database user for each league
-    for (const league of leagues) {
-      // Check if league user exists
-      let leagueUser = await db.select().from(users).where(eq(users.teamName, league)).limit(1);
+    // Step 1: Get or create a default player role
+    let batsmanRoleId: number = 1; // Default
+    try {
+      const roleResult = await db.execute(sql`
+        SELECT id FROM player_roles WHERE name = 'Batsman' LIMIT 1;
+      `);
       
-      if (leagueUser.length === 0) {
-        // Create a new user for this league
-        const newUser = {
-          username: `league_${league.toLowerCase().replace(/\\s+/g, '_')}`,
-          password: 'password123', // This would be properly secured in production
-          name: `${league} League`,
-          email: `${league.toLowerCase().replace(/\\s+/g, '_')}@example.com`,
-          teamName: league
-        };
-        
-        const [insertedUser] = await db.insert(users).values(insertUserSchema.parse(newUser)).returning();
-        console.log(`Created user for league: ${league} with ID: ${insertedUser.id}`);
-        leagueUser = [insertedUser];
+      if (roleResult.rowCount && roleResult.rowCount > 0) {
+        batsmanRoleId = roleResult.rows[0].id;
       } else {
-        console.log(`User for league: ${league} already exists with ID: ${leagueUser[0].id}`);
+        // Create a default role if not found
+        const newRoleResult = await db.execute(sql`
+          INSERT INTO player_roles (name, description)
+          VALUES ('Batsman', 'Cricket batsman')
+          RETURNING id;
+        `);
+        batsmanRoleId = newRoleResult.rows[0].id;
       }
+    } catch (error) {
+      console.error('Error getting/creating player role:', error);
+    }
+    
+    // Step 2: Get default IPL team ID
+    let defaultTeamId: number = 1; // Default
+    try {
+      const teamResult = await db.execute(sql`
+        SELECT id FROM ipl_teams LIMIT 1;
+      `);
       
-      // Step 4: Process each team in this league
-      const leagueTeams = teams.filter(t => t.startsWith(`${league}|`))
-                               .map(t => t.split('|')[1]);
-      
-      for (const teamName of leagueTeams) {
-        // Check if fantasy team exists
-        let fantasyTeam = await db.select()
-                                 .from(fantasyTeams)
-                                 .where(and(
-                                   eq(fantasyTeams.userId, leagueUser[0].id),
-                                   eq(fantasyTeams.name, teamName)
-                                 ))
-                                 .limit(1);
+      if (teamResult.rowCount && teamResult.rowCount > 0) {
+        defaultTeamId = teamResult.rows[0].id;
+      }
+    } catch (error) {
+      console.error('Error getting default team ID:', error);
+    }
+    
+    // Step 3: Process each league
+    for (const leagueName of leagueNames) {
+      try {
+        // Check if league exists
+        let leagueId: number;
+        const leagueResult = await db.execute(sql`
+          SELECT id FROM leagues WHERE name = ${leagueName} LIMIT 1;
+        `);
         
-        if (fantasyTeam.length === 0) {
-          // Create fantasy team
-          const newFantasyTeam = {
-            userId: leagueUser[0].id,
-            name: teamName,
-            totalPoints: 0,
-            weeklyPoints: 0
-          };
+        if (leagueResult.rowCount === 0) {
+          // Create new league
+          const newLeagueResult = await db.execute(sql`
+            INSERT INTO leagues (name, description, is_active)
+            VALUES (${leagueName}, ${`${leagueName} Fantasy Cricket League`}, TRUE)
+            RETURNING id;
+          `);
+          leagueId = newLeagueResult.rows[0].id;
+          console.log(`Created league: ${leagueName} with ID: ${leagueId}`);
           
-          const [insertedTeam] = await db.insert(fantasyTeams)
-                                         .values(insertFantasyTeamSchema.parse(newFantasyTeam))
-                                         .returning();
-          
-          console.log(`Created fantasy team: ${teamName} with ID: ${insertedTeam.id}`);
-          fantasyTeam = [insertedTeam];
+          // Create default points system for this league
+          await db.execute(sql`
+            INSERT INTO points_system (league_id, name, description, rules_config)
+            VALUES (
+              ${leagueId}, 
+              ${`${leagueName} Standard Points`}, 
+              ${'Standard Fantasy Cricket Points System'}, 
+              ${JSON.stringify({
+                run: 1,
+                four: 1,
+                six: 2,
+                wicket: 25,
+                catch: 8,
+                stumping: 12,
+                runOut: 6,
+                maidenOver: 8, 
+                duck: -2,
+                thirtyRuns: 4,
+                fiftyRuns: 8,
+                hundredRuns: 16,
+                threeWickets: 4,
+                fourWickets: 8,
+                fiveWickets: 16,
+                captainMultiplier: 2,
+                viceCaptainMultiplier: 1.5
+              })}
+            );
+          `);
+          console.log(`Created points system for league: ${leagueName}`);
         } else {
-          console.log(`Fantasy team: ${teamName} already exists with ID: ${fantasyTeam[0].id}`);
+          leagueId = leagueResult.rows[0].id;
+          console.log(`League ${leagueName} already exists with ID: ${leagueId}`);
         }
         
-        // Step 5: Process players for this team
-        const teamPlayers = leagueData.filter(row => row.Group === league && row.Team === teamName);
+        // Step 4: Get or create league user
+        let userId: number;
+        const userResult = await db.execute(sql`
+          SELECT id FROM users WHERE team_name = ${leagueName} LIMIT 1;
+        `);
         
-        for (const playerData of teamPlayers) {
-          // Check if player exists in our database
-          let player = await db.select()
-                              .from(players)
-                              .where(eq(players.name, playerData.Player))
-                              .limit(1);
-          
-          if (player.length === 0) {
-            // Create new player with basic info
-            const newPlayer = {
-              name: playerData.Player,
-              iplTeamId: defaultTeamId,
-              roleId: batsmanRoleId,
-              imageUrl: null,
-              battingAvg: null,
-              bowlingAvg: null,
-              strikeRate: null,
-              economy: null,
-              totalRuns: 0,
-              totalWickets: 0,
-              totalMatches: 0
-            };
+        if (userResult.rowCount === 0) {
+          // Create a user for this league
+          const newUserResult = await db.execute(sql`
+            INSERT INTO users (username, password, name, email, team_name)
+            VALUES (
+              ${`league_${leagueName.toLowerCase().replace(/\s+/g, '_')}`},
+              ${'password123'}, 
+              ${`${leagueName} League`},
+              ${`${leagueName.toLowerCase().replace(/\s+/g, '_')}@example.com`},
+              ${leagueName}
+            )
+            RETURNING id;
+          `);
+          userId = newUserResult.rows[0].id;
+          console.log(`Created user for league: ${leagueName} with ID: ${userId}`);
+        } else {
+          userId = userResult.rows[0].id;
+          console.log(`User for league: ${leagueName} already exists with ID: ${userId}`);
+        }
+        
+        // Step 5: Process teams in this league
+        const leagueTeams = teamMapping.filter(t => t.leagueName === leagueName);
+        for (const { teamName } of leagueTeams) {
+          try {
+            // Check if team exists
+            let teamId: number;
+            const teamResult = await db.execute(sql`
+              SELECT id FROM fantasy_teams
+              WHERE user_id = ${userId} AND name = ${teamName}
+              LIMIT 1;
+            `);
             
-            const [insertedPlayer] = await db.insert(players)
-                                            .values(insertPlayerSchema.parse(newPlayer))
-                                            .returning();
+            if (teamResult.rowCount === 0) {
+              // Create new fantasy team
+              const newTeamResult = await db.execute(sql`
+                INSERT INTO fantasy_teams (user_id, league_id, name, total_points, weekly_points)
+                VALUES (${userId}, ${leagueId}, ${teamName}, 0, 0)
+                RETURNING id;
+              `);
+              teamId = newTeamResult.rows[0].id;
+              console.log(`Created fantasy team: ${teamName} with ID: ${teamId}`);
+            } else {
+              teamId = teamResult.rows[0].id;
+              
+              // Update team with league ID if missing
+              await db.execute(sql`
+                UPDATE fantasy_teams 
+                SET league_id = ${leagueId}
+                WHERE id = ${teamId} AND (league_id IS NULL OR league_id = 0);
+              `);
+              console.log(`Fantasy team: ${teamName} already exists with ID: ${teamId}`);
+            }
             
-            console.log(`Created player: ${playerData.Player} with ID: ${insertedPlayer.id}`);
-            player = [insertedPlayer];
-          }
-          
-          // Check if player is already in this fantasy team
-          const existingTeamPlayer = await db.select()
-                                            .from(fantasyTeamPlayers)
-                                            .where(and(
-                                              eq(fantasyTeamPlayers.fantasyTeamId, fantasyTeam[0].id),
-                                              eq(fantasyTeamPlayers.playerId, player[0].id)
-                                            ))
-                                            .limit(1);
-          
-          if (existingTeamPlayer.length === 0) {
-            // Add player to fantasy team
-            const isCaptain = playerData.CVCTag === 'C';
-            const isViceCaptain = playerData.CVCTag === 'VC';
+            // Step 6: Process players for this team
+            const teamPlayers = leagueData.filter(row => 
+              row.Group === leagueName && row.Team === teamName
+            );
             
-            const fantasyTeamPlayer = {
-              fantasyTeamId: fantasyTeam[0].id,
-              playerId: player[0].id,
-              isCaptain,
-              isViceCaptain
-            };
-            
-            await db.insert(fantasyTeamPlayers)
-                   .values(insertFantasyTeamPlayerSchema.parse(fantasyTeamPlayer));
-            
-            console.log(`Added ${playerData.Player} to team ${teamName} ${isCaptain ? 'as Captain' : isViceCaptain ? 'as Vice Captain' : ''}`);
-          } else {
-            console.log(`Player ${playerData.Player} already in team ${teamName}`);
+            for (const playerData of teamPlayers) {
+              try {
+                // Check if player exists
+                let playerId: number;
+                const playerResult = await db.execute(sql`
+                  SELECT id FROM players WHERE name = ${playerData.Player} LIMIT 1;
+                `);
+                
+                if (playerResult.rowCount === 0) {
+                  // Create new player
+                  const newPlayerResult = await db.execute(sql`
+                    INSERT INTO players (
+                      name, ipl_team_id, role_id, total_runs, total_wickets, total_matches
+                    )
+                    VALUES (
+                      ${playerData.Player}, 
+                      ${defaultTeamId}, 
+                      ${batsmanRoleId},
+                      0, 0, 0
+                    )
+                    RETURNING id;
+                  `);
+                  playerId = newPlayerResult.rows[0].id;
+                  console.log(`Created player: ${playerData.Player} with ID: ${playerId}`);
+                } else {
+                  playerId = playerResult.rows[0].id;
+                }
+                
+                // Check if player is already in this fantasy team
+                const teamPlayerResult = await db.execute(sql`
+                  SELECT id FROM fantasy_team_players
+                  WHERE fantasy_team_id = ${teamId} AND player_id = ${playerId}
+                  LIMIT 1;
+                `);
+                
+                if (teamPlayerResult.rowCount === 0) {
+                  // Add player to fantasy team
+                  const isCaptain = playerData.CVCTag === 'C';
+                  const isViceCaptain = playerData.CVCTag === 'VC';
+                  
+                  await db.execute(sql`
+                    INSERT INTO fantasy_team_players (fantasy_team_id, player_id, is_captain, is_vice_captain)
+                    VALUES (${teamId}, ${playerId}, ${isCaptain}, ${isViceCaptain});
+                  `);
+                  console.log(`Added ${playerData.Player} to team ${teamName} ${isCaptain ? 'as Captain' : isViceCaptain ? 'as Vice Captain' : ''}`);
+                } else {
+                  console.log(`Player ${playerData.Player} already in team ${teamName}`);
+                }
+              } catch (error) {
+                console.error(`Error processing player ${playerData.Player}:`, error);
+              }
+            }
+          } catch (error) {
+            console.error(`Error processing team ${teamName}:`, error);
           }
         }
+      } catch (error) {
+        console.error(`Error processing league ${leagueName}:`, error);
       }
     }
     
